@@ -1,0 +1,6 @@
+[submodule "modules/simde"]
+	path = modules/simde
+	url = git@github.com:simd-everywhere/simde.git
+[submodule "modules/tclap"]
+	path = modules/tclap
+	url = git@github.com:mirror/tclap.git

@@ -8,5 +8,12 @@ set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -O2 --std=c++17 -Wall -flto" )
 
 enable_language(CXX)
 
-add_executable(labor src/labor.cpp)
+add_executable(labor src/labor.cpp src/taskpool.cpp)
+
+set(LIBS ${LIBS})
+
+target_include_directories(labor PRIVATE
+  include
+  modules/tclap/include
+  modules/simde/include)
 target_link_libraries(labor ${LIBS})
