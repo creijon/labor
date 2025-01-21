@@ -5,12 +5,23 @@
 #include <chrono>
 #include <thread>
 
-static bool PrintPath(const std::string& path)
+class PathTask : public Task
 {
-    std::this_thread::sleep_for(std::chrono::seconds(1));
-    std::cout << path << std::endl;
-    return true;
-}
+public:
+    PathTask(const std::string& str)
+        : _path(str)
+    {
+    }
+
+    void operator()() override
+    {
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+        std::cout << _path << std::endl;
+    }
+
+private:
+    std::string _path;
+};
 
 static void Complete()
 {
@@ -46,13 +57,19 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    std::vector<std::string> paths = {"One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten"};
+    std::vector<std::shared_ptr<Task>> paths =
+        { std::make_shared<PathTask>("One"),
+          std::make_shared<PathTask>("Two"),
+          std::make_shared<PathTask>("Three"),
+          std::make_shared<PathTask>("Four"),
+          std::make_shared<PathTask>("Five"),
+          std::make_shared<PathTask>("Six"),
+          std::make_shared<PathTask>("Seven"),
+          std::make_shared<PathTask>("Eight"),
+          std::make_shared<PathTask>("Nine"),
+          std::make_shared<PathTask>("Ten") };
 
-    TaskPool pool(paths, PrintPath, Complete);
-
-    // Not strictly necessary, since all worker threads are waited on in the destructor of the TaskPool. 
-    // But this enables us to set a breakpoint.
-    pool.WaitToComplete();
+    TaskPool pool(paths, Complete);
 
     return 0;
 }
